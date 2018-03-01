@@ -1,4 +1,4 @@
-﻿Imports System.Numerics
+Imports System.Numerics
 Imports System
 Module Module1
 
@@ -1107,22 +1107,22 @@ Module Module1
         Display_Maze_First(Maze, width, height, -1, -1, Maze_Visited, "Generate")
 
         For i = width To 0 Step -1
-            For y = height To 0 Step -1
-                If i - 1 < 0 And y - 1 < 0 Then
+            For y = height To 0 Step -1 'Steps over every cell in the maze, working from bottom right to top left
+                If i - 1 < 0 And y - 1 < 0 Then 'Checks to see if the program is at the final cell
                     Maze_Visited(i, y) = True
-                    random_Int = 3
+                    random_Int = 3 'When Random_Int is 3, nothing will happen
                 ElseIf i = 0 Then
-                    random_Int = 1
+                    random_Int = 1 'Program can only carve a path up
                 ElseIf y = 0 Then
-                    random_Int = 2
+                    random_Int = 2 'Program can only carve a path up
                 Else
-                    random_Int = Random.Next(1, 3)
+                    random_Int = Random.Next(1, 3) 'if Progam can do both direction, randomly pick between 1 (up) and 2 (left)
                 End If
 
                 If random_Int = 1 Then 'North
                     If Maze(i, y - 1) = "|_" Then
                         Maze(i, y - 1) = "| "
-                    ElseIf Maze(i, y - 1) = " _" Then
+                    ElseIf Maze(i, y - 1) = " _" Then  'carve a path up
                         Maze(i, y - 1) = "  "
                     ElseIf Maze(i, y - 1) = "| " Then
                     End If
@@ -1130,7 +1130,7 @@ Module Module1
                 ElseIf random_Int = 2 Then 'West
                     If Maze(i, y) = "|_" Then
                         Maze(i, y) = " _"
-                    ElseIf Maze(i, y) = " _" Then
+                    ElseIf Maze(i, y) = " _" Then 'carve a path Left
                     ElseIf Maze(i, y) = "| " Then
                         Maze(i, y) = "  "
                     End If
@@ -1142,7 +1142,7 @@ Module Module1
                     Display_Maze(Maze, width, height, i, y, Maze_Visited, "Generate", LastX, LastY)
                 End If
 
-                Maze_Visited(i, y) = True
+                Maze_Visited(i, y) = True 'set the cell to visited, to be used for displaying the maze
 
             Next
         Next
@@ -1159,12 +1159,14 @@ Module Module1
 
     Sub Sidewinder(ByVal Maze(,) As String, ByVal width As Integer, ByVal height As Integer, ByVal Maze_Visited(,) As Boolean, ByVal Display_Each_Itteration As Boolean)
 
+        'http://weblog.jamisbuck.org/2011/2/3/maze-generation-sidewinder-algorithm.html
+
         Console.Clear()
         Console.Title = "Sidewinder Generating..."
 
         Dim Done As Boolean = False
 
-        Dim Run As New Queue
+        Dim Run As New Queue 'could have used any of the 3 major structures here, but Queues just proved to be the easiest
         Dim Up_Run As New Queue
         Dim Run_Done As Boolean
         Dim Row_Done As Boolean
@@ -1195,11 +1197,11 @@ Module Module1
                 Current_X = 0
             End If
 
-            Do
+            Do 'Loop until the current run is finished (program carvs a path up)
 
                 Run_Done = False
 
-                Run.Enqueue(Current_X)
+                Run.Enqueue(Current_X) 'Add the current cell to the run queue
                 Up_Run.Enqueue(Current_X)
 
                 If Current_X + 1 > width Then
@@ -1208,13 +1210,13 @@ Module Module1
                     Right = True
                 End If
 
-                If Current_Y - 1 < 0 Then
+                If Current_Y - 1 < 0 Then 'Decides if the program can go up or right (depending on maze boundaries)
                     Up = False
                 Else
                     Up = True
                 End If
 
-                If Up = False And Right = False Then
+                If Up = False And Right = False Then 'If these are both false, the program must be in the top right
                     Top_Right = True
                 Else
                     Top_Right = False
@@ -1225,38 +1227,38 @@ Module Module1
                 If Top_Right <> True Then
                     If Random_Int = 0 Then
                         If Right = True Then
-                            Current_X += 1
+                            Current_X += 1 'go right
                         Else
-                            Run_Done = True
+                            Run_Done = True 'end the run as the program has gone up.
                         End If
 
                     Else
                         If Up = True Then
-                            Run_Done = True
+                            Run_Done = True 'end the run as the program has gone up.
                         Else
-                            Current_X += 1
+                            Current_X += 1 'go right
                         End If
 
                     End If
 
                 Else
-                    Run_Done = True
+                    Run_Done = True 'if in top right, run is done as on last cell
 
                 End If
 
             Loop Until Run_Done = True
 
             If Current_X = width Then
-                Row_Done = True
+                Row_Done = True 'used to check when to move on to the next row
             Else
                 Row_Done = False
-                Current_X += 1
+                Current_X += 1 'Move right one in preperation for a new run
             End If
 
             If Run.Count <> 1 Then
                 For i = 1 To Run.Count
 
-                    If Run.Peek <> 0 Then
+                    If Run.Peek <> 0 Then 'Makes sure the program doesn't change the x = 0 cell.
                         If i <> 1 Then
                             If Maze(Run.Peek, Current_Y) = "|_" Then
                                 Maze(Run.Peek, Current_Y) = " _"
@@ -1268,13 +1270,13 @@ Module Module1
                         End If
                     End If
 
-                    Maze_Visited(Run.Peek, Current_Y) = True
+                    Maze_Visited(Run.Peek, Current_Y) = True 'used for the displaying (not essential to the algorithm)
 
                     If Display_Each_Itteration = True Then
                         Display_Maze(Maze, width, height, Run.Peek, Current_Y, Maze_Visited, "Generate", LastX, LastY)
                     End If
 
-                    Run.Dequeue()
+                    Run.Dequeue() 'stops the same cell from being processed twice
 
                 Next
             End If
@@ -1285,15 +1287,15 @@ Module Module1
             Random_Int = Random.Next(0, Up_Run.Count)
 
             For i = 1 To Random_Int
-                Up_Run.Dequeue()
+                Up_Run.Dequeue() 'pop off a random number of values from the queue
             Next
 
             If Current_Y <> 0 Then
 
-                If Maze(Up_Run.Peek, Current_Y - 1) = "|_" Then
+                If Maze(Up_Run.Peek, Current_Y - 1) = "|_" Then 'change the cell above the up_run value (random up path)
                     Maze(Up_Run.Peek, Current_Y - 1) = "| "
 
-                ElseIf Maze(Up_Run.Peek, Current_Y - 1) = " _" Then
+                ElseIf Maze(Up_Run.Peek, Current_Y - 1) = " _" Then 
                     Maze(Up_Run.Peek, Current_Y - 1) = "  "
 
                 End If
@@ -1305,11 +1307,11 @@ Module Module1
             End If
 
             If Row_Done = True Then
-                Current_Y += 1
+                Current_Y += 1 'move down a row
             End If
 
             If Current_Y = width + 1 Then
-                Done = True
+                Done = True 'finish the algorithm
             Else
                 Done = False
             End If
@@ -1328,9 +1330,12 @@ Module Module1
 
     Sub Load_Maze(ByRef Maze(,) As String, ByVal width As Integer, ByVal height As Integer, ByRef Maze_visited(,) As Boolean, ByVal Display_Each_Itteration As Boolean, ByVal FileName As String)
 
+        'In all honestly, this was one of the hardest parts of the program to get working. Mainly due to the need to redefine the dimensions for the maze. I had to restructure a lot of the sub's to make it work
+        'I would rank this sub higher than A* in difficulty...
+
         Console.Clear()
 
-        Dim FileHandle As IO.StreamReader
+        Dim FileHandle As IO.StreamReader 'Open in read format
         Dim MazeRow As String
 
         Dim Temp_Height As Integer
@@ -1341,16 +1346,20 @@ Module Module1
             FileName = Console.ReadLine()
         End If
 
-        Try
+        Try 'if program crashes, either file doesn't exist, or dimensions currently saved by the maze are incorrect.
 
-            FileHandle = New IO.StreamReader(FileName & ".Txt")
-
+            If Lcase(mid(FileName, len(FileName) - 3)) = ".txt" Then 'Checks for a .Txt at the end of the filename
+                FileHandle = New IO.StreamReader(FileName) 'user didn't listen to instructions, so don't bother adding .txt
+            else
+                FileHandle = New IO.StreamReader(FileName & ".Txt") 'adds ".txt" to the file name. 
+            End if
+                        
             Temp_Height = FileHandle.ReadLine()
             Temp_Width = FileHandle.ReadLine()
 
             If Temp_Height <> height Or Temp_Width <> width Then
                 Dim x As Integer
-                x = "Crash"
+                x = "Crash" 'Intentianally crash the code to execute the catch statement
             End If
 
             For row = 0 To width
@@ -1362,18 +1371,21 @@ Module Module1
 
             FileHandle.Close()
 
-            Maze_visited(0, 0) = True
+            Maze_visited(0, 0) = True 'Tells the menu to unlock the post generation options
 
             Console.WriteLine("Maze Loaded, please press enter")
             Console.ReadLine()
 
         Catch
+            Try 'if this crashes, the file name is wrong. if not, the filename is correct and the dimensions are wrong
 
-            Try
+            If Lcase(mid(FileName, len(FileName) - 3)) = ".txt" Then 'Checks for a .Txt at the end of the filename
+                FileHandle = New IO.StreamReader(FileName) 'user didn't listen to instructions, so don't bother adding .txt. the same as above
+            else
+                FileHandle = New IO.StreamReader(FileName & ".Txt") 'adds ".txt" to the file name. 
+            End if
 
-                FileHandle = New IO.StreamReader(FileName & ".Txt")
-
-                Set_Dimensions(FileHandle.ReadLine(), FileHandle.ReadLine(), "Load", Display_Each_Itteration, FileName)
+                Set_Dimensions(FileHandle.ReadLine(), FileHandle.ReadLine(), "Load", Display_Each_Itteration, FileName) 'change the dimensions to that which are identified in the first two lines of the file
 
                 FileHandle.Close()
 
@@ -1399,7 +1411,7 @@ Module Module1
         Dim Current_X As Integer = -1
         Dim Current_Y As Integer = -1
 
-        Display_Maze_First(Maze, Width, height, Current_X, Current_Y, Maze_visited, "Display")
+        Display_Maze_First(Maze, Width, height, Current_X, Current_Y, Maze_visited, "Display") 'Displays the current maze. Fairly simple
 
         Console.WriteLine("DONE, please press enter to return to the Menu...")
         Console.ReadLine()
@@ -1412,7 +1424,7 @@ Module Module1
         Dim finished As Boolean
         Dim up, down, right, left As Boolean
 
-        Dim user_answer As String
+        Dim user_answer As String 'used to store the last cell the user was in, so the program can remove the + character
 
         Dim LastX As Integer = 0
         Dim LastY As Integer = 0
@@ -1438,7 +1450,7 @@ Module Module1
 
             For i = 0 To Height
                 For y = 0 To Width
-                    Console.Write(Maze(y, i))
+                    Console.Write(Maze(y, i)) 'just displaying the maze
                 Next
                 Console.Write("|")
                 Console.WriteLine()
@@ -1476,7 +1488,7 @@ Module Module1
         Play_Display_Maze_First(Maze, Width, Height, Player_Current_X, Player_Current_Y)
 
         Do
-            If Player_Current_X = Width And Player_Current_Y = Height + 1 Then
+            If Player_Current_X = Width And Player_Current_Y = Height + 1 Then 'if player is 1 below bottom right, maze has been solved
                 Console.WriteLine()
                 Console.WriteLine("Well done you finished the maze, please press enter to return to the Menu")
                 Console.ReadLine()
@@ -1484,7 +1496,7 @@ Module Module1
             End If
 
             If Player_Current_X = Width And Player_Current_Y = Height Then
-                down = True
+                down = True 'As the 
             Else
                 down = False
             End If
@@ -1492,7 +1504,7 @@ Module Module1
             If Player_Current_X - 1 >= 0 Then 'Left
                 If Maze(Player_Current_X, Player_Current_Y) = "|_" Then
                     left = False
-                ElseIf Maze(Player_Current_X, Player_Current_Y) = "| " Then
+                ElseIf Maze(Player_Current_X, Player_Current_Y) = "| " Then 'Checks where the user can go by looking at all surrounding cells. If there is a wall blocking, user can't go that way.
                     left = False
                 ElseIf Maze(Player_Current_X, Player_Current_Y) = " _" Then
                     left = True
@@ -1506,7 +1518,7 @@ Module Module1
             If Player_Current_X + 1 <= Width Then 'Right
                 If Maze(Player_Current_X + 1, Player_Current_Y) = "|_" Then
                     right = False
-                ElseIf Maze(Player_Current_X + 1, Player_Current_Y) = "| " Then
+                ElseIf Maze(Player_Current_X + 1, Player_Current_Y) = "| " Then 'This is the repeated, only change is direction
                     right = False
                 ElseIf Maze(Player_Current_X + 1, Player_Current_Y) = " _" Then
                     right = True
@@ -1556,7 +1568,7 @@ Module Module1
                 Console.WriteLine()
                 Console.WriteLine("Please press the corresponding arrow key")
 
-                MoveKey = Console.ReadKey().Key
+                MoveKey = Console.ReadKey().Key 'takes user key input
 
                 Select Case MoveKey
                     Case ConsoleKey.DownArrow
@@ -1575,7 +1587,7 @@ Module Module1
                             Valid_move = False
                         End If
 
-                    Case ConsoleKey.RightArrow
+                    Case ConsoleKey.RightArrow 'check to see move is valid, if not loop again. 
                         If right = True Then
                             Valid_move = True
                             Player_Current_X += 1
@@ -1623,15 +1635,15 @@ Module Module1
     Sub Display_Maze_First(ByVal maze(,) As String, ByVal width As Integer, ByVal height As Integer, ByVal Current_X As Integer, ByVal Current_Y As Integer, ByVal Maze_visited(,) As Boolean, ByVal Which As String)
 
         Console.Clear()
-        Console.Write("|S|")
+        Console.Write("|S|") 'writes the start
 
         For i = 0 To width - 1
-            Console.Write("_ ")
+            Console.Write("_ ") 'followed by the top row
         Next
 
         Console.WriteLine()
 
-        For i = 0 To height
+        For i = 0 To height 'double for to cover every cell in the maze
             For y = 0 To width
                 Select Case Which
                     Case "Generate"
@@ -1639,33 +1651,32 @@ Module Module1
                         If y = Current_X And i = Current_Y Then
                             Console.BackgroundColor = ConsoleColor.Green
                         ElseIf Maze_visited(y, i) = True Then
-                            Console.BackgroundColor = ConsoleColor.DarkMagenta
+                            Console.BackgroundColor = ConsoleColor.DarkMagenta 'if generate, colours are included. green for current cell, purple for visited cells and black for everything else
                         Else
                             Console.BackgroundColor = ConsoleColor.Black
                         End If
 
                     Case "Display"
-                        Console.BackgroundColor = ConsoleColor.Black
+                        Console.BackgroundColor = ConsoleColor.Black 'if just display, all black
 
                 End Select
                 Console.Write(maze(y, i))
             Next
-            Console.Write("|")
+            Console.Write("|") 'Add the right hand wall and move down a line
             Console.WriteLine()
 
         Next
-
-
+        
         Console.BackgroundColor = ConsoleColor.Black
 
         For i = 0 To width - 1
-            Console.Write("  ")
+            Console.Write("  ") 'add the spaces before the finish
         Next
 
-        Console.WriteLine("|F|")
+        Console.WriteLine("|F|") 'add the finish
         Console.WriteLine()
 
-        System.Threading.Thread.Sleep(60)
+        System.Threading.Thread.Sleep(60) 'pause to prevent flickering
 
     End Sub
 
@@ -1691,7 +1702,7 @@ Module Module1
         End If
 
         If LastX = -1 And LastY = -1 Then
-            LastX = Current_X
+            LastX = Current_X 
             LastY = Current_Y
 
         Else
@@ -1717,7 +1728,7 @@ Module Module1
 
         End If
 
-        System.Threading.Thread.Sleep(50)
+        System.Threading.Thread.Sleep(50) 'same pause as before to prevent flickering
 
         Console.BackgroundColor = ConsoleColor.Black
 
