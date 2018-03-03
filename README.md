@@ -1,5 +1,4 @@
 # RandomMazeGeneration
-AQA NEA Random Maze Generation program
 
 AQA NEA Coursework program: written in VB.net
 
