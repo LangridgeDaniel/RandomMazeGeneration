@@ -1295,7 +1295,7 @@ Module Module1
                 If Maze(Up_Run.Peek, Current_Y - 1) = "|_" Then 'change the cell above the up_run value (random up path)
                     Maze(Up_Run.Peek, Current_Y - 1) = "| "
 
-                ElseIf Maze(Up_Run.Peek, Current_Y - 1) = " _" Then 
+                ElseIf Maze(Up_Run.Peek, Current_Y - 1) = " _" Then
                     Maze(Up_Run.Peek, Current_Y - 1) = "  "
 
                 End If
@@ -1348,12 +1348,12 @@ Module Module1
 
         Try 'if program crashes, either file doesn't exist, or dimensions currently saved by the maze are incorrect.
 
-            If Lcase(mid(FileName, len(FileName) - 3)) = ".txt" Then 'Checks for a .Txt at the end of the filename
+            If LCase(Mid(FileName, Len(FileName) - 3)) = ".txt" Then 'Checks for a .Txt at the end of the filename
                 FileHandle = New IO.StreamReader(FileName) 'user didn't listen to instructions, so don't bother adding .txt
-            else
+            Else
                 FileHandle = New IO.StreamReader(FileName & ".Txt") 'adds ".txt" to the file name. 
-            End if
-                        
+            End If
+
             Temp_Height = FileHandle.ReadLine()
             Temp_Width = FileHandle.ReadLine()
 
@@ -1379,11 +1379,11 @@ Module Module1
         Catch
             Try 'if this crashes, the file name is wrong. if not, the filename is correct and the dimensions are wrong
 
-            If Lcase(mid(FileName, len(FileName) - 3)) = ".txt" Then 'Checks for a .Txt at the end of the filename
-                FileHandle = New IO.StreamReader(FileName) 'user didn't listen to instructions, so don't bother adding .txt. the same as above
-            else
-                FileHandle = New IO.StreamReader(FileName & ".Txt") 'adds ".txt" to the file name. 
-            End if
+                If LCase(Mid(FileName, Len(FileName) - 3)) = ".txt" Then 'Checks for a .Txt at the end of the filename
+                    FileHandle = New IO.StreamReader(FileName) 'user didn't listen to instructions, so don't bother adding .txt. the same as above
+                Else
+                    FileHandle = New IO.StreamReader(FileName & ".Txt") 'adds ".txt" to the file name. 
+                End If
 
                 Set_Dimensions(FileHandle.ReadLine(), FileHandle.ReadLine(), "Load", Display_Each_Itteration, FileName) 'change the dimensions to that which are identified in the first two lines of the file
 
@@ -1664,7 +1664,7 @@ Module Module1
             Console.WriteLine()
 
         Next
-        
+
         Console.BackgroundColor = ConsoleColor.Black
 
         For i = 0 To width - 1
@@ -1700,7 +1700,7 @@ Module Module1
         End If
 
         If LastX = -1 And LastY = -1 Then
-            LastX = Current_X 
+            LastX = Current_X
             LastY = Current_Y
 
         Else
@@ -1801,7 +1801,7 @@ Module Module1
         End If
 
         If LastX <> -1 Then 'If last = -1, then its the first run through and there is no need to clear another cell of the +
-            Console.SetCursorPosition(LastX * 2, LastY + 1) 
+            Console.SetCursorPosition(LastX * 2, LastY + 1)
 
             If Maze(LastX, LastY) = "|_" Then
                 Console.Write("|_")
@@ -2022,7 +2022,7 @@ Module Module1
                     If Direction = "Up" Then 'Direction is the direction the program will go. 
                         Current_Cell_Y -= 1
 
-                    ElseIf Direction = "Right" Then 
+                    ElseIf Direction = "Right" Then
                         Current_Cell_X += 1
 
                     ElseIf Direction = "Left" Then 'used to move the program in the correct direction
@@ -2098,7 +2098,7 @@ Module Module1
 
         ElseIf Maze_solved(width, height) = "| " Then
             Maze_solved(width, height) = "|+"
-            
+
         ElseIf Maze_solved(width, height) = " _" Then 'do the same for the very last cell. should be top left
             Maze_solved(width, height) = " ±"
 
@@ -2544,13 +2544,13 @@ Module Module1
         Console.Write("Please enter the name you wish for the file to be named (Do not include .txt): ")
         Dim FileName As String = Console.ReadLine()
 
-        If Lcase(mid(FileName, len(FileName) - 3)) = ".txt" Then 'Checks for a .Txt at the end of the filename
-            FileHandle = New IO.StreamWriter(FileName) 'user didn't listen to instructions, so don't bother adding .txt
-        else
-            FileHandle = New IO.StreamWriter(FileName & ".Txt") 'adds ".txt" to the file name. 
-        End if
+        'FileHandle = New IO.StreamWriter(FileName & ".Txt")
 
-        FileHandle = New IO.StreamWriter(FileName) 'opens the file
+        If LCase(Mid(FileName, Len(FileName) - 3)) = ".txt" Then 'Checks for a .Txt at the end of the filename
+            FileHandle = New IO.StreamWriter(FileName) 'user didn't listen to instructions, so don't bother adding .txt
+        Else
+            FileHandle = New IO.StreamWriter(FileName & ".Txt") 'adds ".txt" to the file name. 
+        End If
 
         FileHandle.WriteLine(Height) 'writes the height and width to the file on their own lines
         FileHandle.WriteLine(Width)
