@@ -4,8 +4,8 @@ Module Module1
 
     'I have used regions in this code as in VS it allows me to section up my code into groups. For example pre and post algorithms. They don't do anything other than organise code nicely
 
-    'also, I have decided that the entrance and exit to the mazes will be the top left and bottom right respectivally. However as all of the algorithms generate perfect mazes (every cell can reach every other cell via one path)
-    'I could make these entrances and exits anywhere. 
+    'Also, I have decided that the entrance and exit to the mazes will be the top left and bottom right respectivally. However as all of the algorithms generate perfect mazes (every cell can reach every other cell via one path)
+    'I could make these entrances and exits anywhere. I have just chosen this method to normalise every maze. 
 
     'At the top of every algorithm I have included a link to the webpage I used for researching the algorithm.
 
@@ -1736,11 +1736,14 @@ Module Module1
 
     Sub Play_Display_Maze_First(ByVal Maze(,) As String, ByVal Width As Integer, ByVal height As Integer, ByVal current_x As Integer, ByVal Current_y As Integer)
 
+        'This sub should be called at the start of the playing sub. As it is used to display the whole maze for the first time. Every other time should use Play_Display_Maze as it only updates the correct cell
+        'Much more efficient
+
         If Maze(current_x, Current_y) = "|_" Then
             Maze(current_x, Current_y) = "|±"
         ElseIf Maze(current_x, Current_y) = " _" Then
             Maze(current_x, Current_y) = " ±"
-        ElseIf Maze(current_x, Current_y) = "| " Then
+        ElseIf Maze(current_x, Current_y) = "| " Then 'sets the current cell to have the + or ± symbol (± means there is a wall below the player)
             Maze(current_x, Current_y) = "|+"
         ElseIf Maze(current_x, Current_y) = "  " Then
             Maze(current_x, Current_y) = " +"
@@ -1757,7 +1760,7 @@ Module Module1
 
         For i = 0 To height
             For y = 0 To Width
-                Console.Write(Maze(y, i))
+                Console.Write(Maze(y, i)) 'Displays the maze with the new player symbol
             Next
             Console.Write("|")
             Console.WriteLine()
@@ -1775,7 +1778,7 @@ Module Module1
             Maze(current_x, Current_y) = "|_"
         ElseIf Maze(current_x, Current_y) = " ±" Then
             Maze(current_x, Current_y) = " _"
-        ElseIf Maze(current_x, Current_y) = "|+" Then
+        ElseIf Maze(current_x, Current_y) = "|+" Then 'Changes the cell back to its original state, so when the maze is displayed again and a new cell is set to + and outputted, the cell before it will revert back to its state
             Maze(current_x, Current_y) = "| "
         ElseIf Maze(current_x, Current_y) = " +" Then
             Maze(current_x, Current_y) = "  "
@@ -1785,26 +1788,26 @@ Module Module1
 
     End Sub
 
-    Sub Play_Display_Maze(ByVal Maze(,) As String, ByVal Width As Integer, ByVal height As Integer, ByVal current_x As Integer, ByVal Current_y As Integer, ByRef LastX As Integer, ByRef LastY As Integer) 'Needs Fixing
+    Sub Play_Display_Maze(ByVal Maze(,) As String, ByVal Width As Integer, ByVal height As Integer, ByVal current_x As Integer, ByVal Current_y As Integer, ByRef LastX As Integer, ByRef LastY As Integer)
 
-        Console.SetCursorPosition(current_x * 2, Current_y + 1)
+        Console.SetCursorPosition(current_x * 2, Current_y + 1) 'Sets the cursor position to the players location in the maze. 
 
         If Maze(current_x, Current_y) = "|_" Then
             Console.Write("|±")
         ElseIf Maze(current_x, Current_y) = " _" Then
             Console.Write(" ±")
-        ElseIf Maze(current_x, Current_y) = "| " Then
+        ElseIf Maze(current_x, Current_y) = "| " Then 'Displays the current cell to have a + as the player symbol
             Console.Write("|+")
         ElseIf Maze(current_x, Current_y) = "  " Then
             Console.Write(" +")
         End If
 
-        If LastX <> -1 Then
-            Console.SetCursorPosition(LastX * 2, LastY + 1)
+        If LastX <> -1 Then 'If last = -1, then its the first run through and there is no need to clear another cell of the +
+            Console.SetCursorPosition(LastX * 2, LastY + 1) 
 
             If Maze(LastX, LastY) = "|_" Then
                 Console.Write("|_")
-            ElseIf Maze(LastX, LastY) = " _" Then
+            ElseIf Maze(LastX, LastY) = " _" Then 'Exactly the same as above, only removing the + rather than adding it. 
                 Console.Write(" _")
             ElseIf Maze(LastX, LastY) = "| " Then
                 Console.Write("| ")
@@ -1813,10 +1816,10 @@ Module Module1
             End If
         End If
 
-        LastX = current_x
+        LastX = current_x 'rememberes the last cell to the program can change remove the + on the next run through
         LastY = Current_y
 
-        Console.SetCursorPosition(0, height + 4)
+        Console.SetCursorPosition(0, height + 4) ' Sets the cursor position
 
     End Sub
 
@@ -1824,11 +1827,13 @@ Module Module1
 
     Sub Solve_Last_Recursive(ByVal maze(,) As String, ByVal width As Integer, ByVal height As Integer, ByRef Maze_solved(,) As String, ByVal DisplayEach As Boolean)
 
+        'This pathfinding is based very heavily off the Recursive Backtracking generation algorithm. Therefore there will be many similarities between the two
+
         Console.Title = "Breadth First Search"
 
         For i = 0 To height
             For y = 0 To width
-                Maze_solved(y, i) = maze(y, i)
+                Maze_solved(y, i) = maze(y, i) 'trnasfers the contents of Maze to Maze_solved
             Next
         Next
 
@@ -1838,7 +1843,7 @@ Module Module1
 
         For i = 0 To width
             For y = 0 To height
-                Maze_Visited(i, y) = False
+                Maze_Visited(i, y) = False 'resets the maze_visited array
             Next
         Next
 
@@ -1848,6 +1853,7 @@ Module Module1
         Dim Stack_Y As New Stack
         Dim Temp As New Stack
         Dim Stack_Move As New Stack
+
         Dim Current_Cell_X As Integer = 0
         Dim Current_Cell_Y As Integer = 0
 
@@ -1873,7 +1879,7 @@ Module Module1
             Console.WriteLine()
             For i = 0 To height
                 For y = 0 To width
-                    Console.Write(maze(y, i))
+                    Console.Write(maze(y, i)) 'Just displays the maze
                 Next
                 Console.Write("|")
                 Console.WriteLine()
@@ -1888,7 +1894,7 @@ Module Module1
             Console.WriteLine()
             Console.Write("Are you sure you wish to solve this maze? (Y or N) ")
             Dim user_answer As String = Console.ReadLine()
-            user_answer = Mid(UCase(user_answer), 1, 1)
+            user_answer = Mid(UCase(user_answer), 1, 1) 'takes the first character of the string
 
             If user_answer = "Y" Then
                 Valid_answer = True
@@ -1903,7 +1909,7 @@ Module Module1
         Console.Title = "Calculating Route"
 
         Current_Cell_X = 0
-        Current_Cell_Y = 0
+        Current_Cell_Y = 0 'start at top left.
 
         Right = False
         Down = False
@@ -1918,23 +1924,22 @@ Module Module1
         End If
 
         Do
-
             If DisplayEach = True Then
                 Display_Maze(Maze_solved, width, height, Current_Cell_X, Current_Cell_Y, Maze_Visited, "Generate", LastX, LastY)
             End If
 
             Maze_Visited(Current_Cell_X, Current_Cell_Y) = True
 
-            If Current_Cell_X = width And Current_Cell_Y = height Then
+            If Current_Cell_X = width And Current_Cell_Y = height Then 'if at the bottom right, algorithm has found the path
                 Done = True
             Else
 
                 Right = False
-                Down = False
+                Down = False 'Reset direction variables
                 Up = False
                 Left = False
 
-                Stack_Move.Clear()
+                Stack_Move.Clear() 'reset the move stack
 
                 If (Current_Cell_X - 1) < 0 Then
                     Left = False
@@ -1942,7 +1947,7 @@ Module Module1
                     If Maze_Visited(Current_Cell_X - 1, Current_Cell_Y) = False Then
                         If maze(Current_Cell_X, Current_Cell_Y) = " _" Or maze(Current_Cell_X, Current_Cell_Y) = "  " Then
                             Left = True
-                            Stack_Move.Push("Left")
+                            Stack_Move.Push("Left") 'Checks what direction the program can move, using boundaries and cell values. If the program can move that way, it is pushed to the stack
                         Else
                             Left = False
                         End If
@@ -1957,7 +1962,7 @@ Module Module1
                     If Maze_Visited(Current_Cell_X + 1, Current_Cell_Y) = False Then
                         If maze(Current_Cell_X + 1, Current_Cell_Y) = " _" Or maze(Current_Cell_X + 1, Current_Cell_Y) = "  " Then
                             Right = True
-                            Stack_Move.Push("Right")
+                            Stack_Move.Push("Right") 'This is the same as above, other than different directions
                         Else
                             Right = False
                         End If
@@ -1972,7 +1977,7 @@ Module Module1
                     If Maze_Visited(Current_Cell_X, Current_Cell_Y - 1) = False Then
                         If maze(Current_Cell_X, Current_Cell_Y - 1) = "| " Or maze(Current_Cell_X, Current_Cell_Y - 1) = "  " Then
                             Up = True
-                            Stack_Move.Push("Up")
+                            Stack_Move.Push("Up") 'same as above
                         Else
                             Up = False
                         End If
@@ -1987,7 +1992,7 @@ Module Module1
                     If Maze_Visited(Current_Cell_X, Current_Cell_Y + 1) = False Then
                         If maze(Current_Cell_X, Current_Cell_Y) = "| " Or maze(Current_Cell_X, Current_Cell_Y) = "  " Then
                             Down = True
-                            Stack_Move.Push("Down")
+                            Stack_Move.Push("Down") 'same as above
                         Else
                             Down = False
                         End If
@@ -1997,7 +2002,7 @@ Module Module1
                 End If
 
 
-                If Up = False And Right = False And Down = False And Left = False Then
+                If Up = False And Right = False And Down = False And Left = False Then 'If program is "stuck" (can't move up, down, left or right backtracking should begin)
                     stuck = True
                 Else
                     stuck = False
@@ -2010,19 +2015,19 @@ Module Module1
                     If Random_Int <> 0 Then
 
                         For i = 1 To Random_Int
-                            Stack_Move.Pop()
+                            Stack_Move.Pop() 'pop off a random number of directions from the stack
                         Next
                     End If
 
-                    Direction = Stack_Move.Peek
+                    Direction = Stack_Move.Peek 'Direction is the value for Stack_move. This will be random due to the random number of pop'ing that will occur
 
                     If Direction = "Up" Then 'Direction is the direction the program will go. 
                         Current_Cell_Y -= 1
 
-                    ElseIf Direction = "Right" Then
+                    ElseIf Direction = "Right" Then 
                         Current_Cell_X += 1
 
-                    ElseIf Direction = "Left" Then
+                    ElseIf Direction = "Left" Then 'used to move the program in the correct direction
                         Current_Cell_X -= 1
 
                     ElseIf Direction = "Down" Then
@@ -2030,25 +2035,25 @@ Module Module1
 
                     End If
 
-                    Stack_X.Push(Current_Cell_X)
+                    Stack_X.Push(Current_Cell_X) 'push on the current cells, so if the program needs to backtrack, it can use this stack to retrace its steps. 
                     Stack_Y.Push(Current_Cell_Y)
 
                 Else
 
-                    If Stack_X.Count = 1 Then
+                    If Stack_X.Count = 1 Then 'can't read the value of an empty stack
 
                         Stack_X.Pop()
                         Stack_Y.Pop()
 
-                    ElseIf Stack_X.Count = 0 Then
+                    ElseIf Stack_X.Count = 0 Then 'can't pop an empty stack
 
-                        Current_Cell_Y = 0
+                        Current_Cell_Y = 0 'if the move stack is empty, the program must be back at the start point. 
                         Current_Cell_X = 0
 
                     Else
 
                         Stack_X.Pop()
-                        Stack_Y.Pop()
+                        Stack_Y.Pop() 'pop the current cell and move back one by reading the new values
 
                         Current_Cell_X = Stack_X.Peek
                         Current_Cell_Y = Stack_Y.Peek
@@ -2057,7 +2062,7 @@ Module Module1
                 End If
             End If
 
-        Loop Until Done = True
+        Loop Until Done = True 'keep looping until the algorithm is at the end
 
         For i = 0 To width
             For y = 0 To height
@@ -2074,7 +2079,7 @@ Module Module1
             If Maze_solved(Stack_X.Peek, Stack_Y.Peek) = "|_" Then
                 Maze_solved(Stack_X.Peek, Stack_Y.Peek) = "|±"
 
-            ElseIf Maze_solved(Stack_X.Peek, Stack_Y.Peek) = "| " Then
+            ElseIf Maze_solved(Stack_X.Peek, Stack_Y.Peek) = "| " Then 'same as playing the maze, the program adds the + or ± to every cell in the stack. Effectivally retracing steps from the end to the start
                 Maze_solved(Stack_X.Peek, Stack_Y.Peek) = "|+"
 
             ElseIf Maze_solved(Stack_X.Peek, Stack_Y.Peek) = " _" Then
@@ -2085,7 +2090,7 @@ Module Module1
 
             End If
 
-            Stack_X.Pop()
+            Stack_X.Pop() 'pop the top value to move onto the next cell
             Stack_Y.Pop()
 
         Next
@@ -2095,8 +2100,8 @@ Module Module1
 
         ElseIf Maze_solved(width, height) = "| " Then
             Maze_solved(width, height) = "|+"
-
-        ElseIf Maze_solved(width, height) = " _" Then
+            
+        ElseIf Maze_solved(width, height) = " _" Then 'do the same for the very last cell. should be top left
             Maze_solved(width, height) = " ±"
 
         ElseIf Maze_solved(width, height) = "  " Then
@@ -2104,7 +2109,7 @@ Module Module1
 
         End If
 
-        Display_Maze_First(Maze_solved, width, height, -1, -1, Maze_Visited, "Display")
+        Display_Maze_First(Maze_solved, width, height, -1, -1, Maze_Visited, "Display") 'display the solved maze.
 
         Console.Title = "Route Found"
 
@@ -2116,39 +2121,46 @@ Module Module1
 
     Sub Solve_Last_AStar(Maze(,) As String, width As Integer, height As Integer, Maze_Solved(,) As String, ByVal DisplayEach As Boolean)
 
+        'Heuristic scores:
+        'FScore - MovementScore + DistanceScore.
+        'MovementScore - Cost to get to that cell from the start via the given path. Cost for moving from one cell to another is 1 in this maze.
+        'DistanceScore - Distance from Current cell to end (as crow flies). will be ((width - currentX) + (height - CurrentY)) - 1 for any given cell.
+
+        'Lower is better for all of these values
+
         Console.Title = "A* Search"
 
         For i = 0 To height
             For y = 0 To width
-                Maze_Solved(y, i) = Maze(y, i)
+                Maze_Solved(y, i) = Maze(y, i) 'move the contents of Maze into Maze_Solved. could have used "Maze_Solver(,) = Maze(,)" but I found it to be inconsistant in testing...
             Next
         Next
 
         Dim FScore(width, height) As Integer
         Dim FTemp As Integer
-        Dim MovementScore(width, height) As Integer
+        Dim MovementScore(width, height) As Integer 'Used to calculate Heuristic values throughout the algorithm
         Dim DistanceScore(width, height) As Integer
 
-        Dim ParentCell(width, height) As String
+        Dim ParentCell(width, height) As String 'Used to track the parent cell of any cell being used
 
         Dim LastX As Integer = -1
         Dim LastY As Integer = -1
 
         Dim Valid_Answer As Boolean
 
-        Dim Openlist(width, height) As Boolean
+        Dim Openlist(width, height) As Boolean 'used to check what cells need processing and which don't
         Dim ClosedList(width, height) As Boolean
 
         Dim Random As New Random
         Dim RandomInt As Integer
 
-        Dim Neighbours As New Queue
+        Dim Neighbours As New Queue 'Used to store the accessable Neighbours each cell being processed has
         Dim Change As String
         Dim NeighbourTempX, NeighbourTempY As String
 
         For i = 0 To width
             For y = 0 To height
-                ClosedList(i, y) = False
+                ClosedList(i, y) = False 'sets all values of Closed and OpenList to False. Incase they initialise as True. They shouldn't, but its just making sure.
                 Openlist(i, y) = False
             Next
         Next
@@ -2165,8 +2177,8 @@ Module Module1
         NeighbourTempX = ""
         NeighbourTempY = ""
 
-        FScore(0, 0) = width + height - 1
-        MovementScore(0, 0) = 0
+        FScore(0, 0) = width + height - 1 'This FScore will always be Width + height - 1 for cell (0, 0). This is just calculating the distance score as since the Movement is 0, there is nothing to add on.
+        MovementScore(0, 0) = 0 'and same applies here, since the program has not moved yet, the movement score will be 0 for (0, 0)
 
         ClosedList(0, 0) = True
 
@@ -2182,8 +2194,8 @@ Module Module1
             Console.WriteLine()
             For i = 0 To height
                 For y = 0 To width
-                    Console.Write(Maze(y, i))
-                Next
+                    Console.Write(Maze(y, i)) 'Just displays the maze
+                Next                          'Same as Breadth First pathfinding above.
                 Console.Write("|")
                 Console.WriteLine()
             Next
@@ -2210,7 +2222,7 @@ Module Module1
 
         For i = 0 To width
             For y = 0 To height
-                DistanceScore(i, y) = (width - CurrentX) + (height - CurrentY)
+                DistanceScore(i, y) = (width - CurrentX) + (height - CurrentY) 'calculates the distance scores of every cell in the maze
             Next
         Next
 
@@ -2221,11 +2233,11 @@ Module Module1
         Do
             Console.Title = "Generating Route"
 
-            Neighbours.Clear()
+            Neighbours.Clear() 'resets Neighbours
 
             If (CurrentX - 1) < 0 Then
             Else
-                If Maze(CurrentX, CurrentY) = " _" Or Maze(CurrentX, CurrentY) = "  " Then
+                If Maze(CurrentX, CurrentY) = " _" Or Maze(CurrentX, CurrentY) = "  " Then 'left
                     If ClosedList(CurrentX - 1, CurrentY) = False Then
                         Openlist(CurrentX - 1, CurrentY) = True
                         Neighbours.Enqueue(CurrentX - 1 & " " & CurrentY)
@@ -2235,10 +2247,10 @@ Module Module1
 
             If (CurrentX + 1) > width Then
             Else
-                If Maze(CurrentX + 1, CurrentY) = " _" Or Maze(CurrentX + 1, CurrentY) = "  " Then
+                If Maze(CurrentX + 1, CurrentY) = " _" Or Maze(CurrentX + 1, CurrentY) = "  " Then 'Checks for viable Neighbours of the cell currently being processed. Add viable neighbours to the open list and to the Neighbours Queue
                     If ClosedList(CurrentX + 1, CurrentY) = False Then
                         Openlist(CurrentX + 1, CurrentY) = True
-                        Neighbours.Enqueue(CurrentX + 1 & " " & CurrentY)
+                        Neighbours.Enqueue(CurrentX + 1 & " " & CurrentY) 'right
                     End If
                 End If
             End If
@@ -2248,7 +2260,7 @@ Module Module1
                 If Maze(CurrentX, CurrentY - 1) = "| " Or Maze(CurrentX, CurrentY - 1) = "  " Then
                     If ClosedList(CurrentX, CurrentY - 1) = False Then
                         Openlist(CurrentX, CurrentY - 1) = True
-                        Neighbours.Enqueue(CurrentX & " " & CurrentY - 1)
+                        Neighbours.Enqueue(CurrentX & " " & CurrentY - 1) 'up 
                     End If
                 End If
             End If
@@ -2258,56 +2270,56 @@ Module Module1
                 If Maze(CurrentX, CurrentY) = "| " Or Maze(CurrentX, CurrentY) = "  " Then
                     If ClosedList(CurrentX, CurrentY + 1) = False Then
                         Openlist(CurrentX, CurrentY + 1) = True
-                        Neighbours.Enqueue(CurrentX & " " & CurrentY + 1)
+                        Neighbours.Enqueue(CurrentX & " " & CurrentY + 1) 'down
                     End If
                 End If
             End If
 
-            For Each element As String In Neighbours
+            For Each element As String In Neighbours 'goes over every string in Neighbours (everything added)
 
                 For i = 1 To Len(element)
-                    If Mid(element, i, 1) = " " Then
+                    If Mid(element, i, 1) = " " Then 'finds where the space is (splits up the X and Y coords)
                         Space = i
                     End If
                 Next
 
                 For i = 1 To Space
-                    NeighbourTempX = NeighbourTempX + Mid(element, i, 1)
+                    NeighbourTempX = NeighbourTempX + Mid(element, i, 1) 'goes up to the space and stores stuff before that at the X coords
                 Next
 
                 For i = Space + 1 To Len(element)
-                    NeighbourTempY = NeighbourTempY + Mid(element, i, 1)
+                    NeighbourTempY = NeighbourTempY + Mid(element, i, 1) 'goes up to the space and stores stuff after that at the Y coords
                 Next
 
-                MovementScore(NeighbourTempX, NeighbourTempY) = MovementScore(CurrentX, CurrentY) + 1
+                MovementScore(NeighbourTempX, NeighbourTempY) = MovementScore(CurrentX, CurrentY) + 1 'calculates the moveement score by adding one to the cell before hand
 
-                FScore(NeighbourTempX, NeighbourTempY) = (((width - NeighbourTempX + height - NeighbourTempY)) + (MovementScore(NeighbourTempX, NeighbourTempY)))
+                FScore(NeighbourTempX, NeighbourTempY) = (((width - NeighbourTempX + height - NeighbourTempY)) + (MovementScore(NeighbourTempX, NeighbourTempY))) 'calculates the FScore for the neighbour
 
-                NeighbourTempX = ""
+                NeighbourTempX = "" 'resets the variables
                 NeighbourTempY = ""
 
-            Next
+            Next 'This is repeated for every Neighbour. So each is processed. 
 
             If DisplayEach = True Then
                 Console.WriteLine()
             End If
 
-            FTemp = -1
+            FTemp = -1 'Will tell the program this is the first run through
 
             For i = 0 To width
-                For y = 0 To height
-                    If Openlist(i, y) = True Then
-                        If FTemp = -1 Then
+                For y = 0 To height 'steps through every cell
+                    If Openlist(i, y) = True Then 'checks to see if the cell being checked (for loops) is on the open list
+                        If FTemp = -1 Then 'if it is, and Ftemp is -1, then we assume this cell has the lowest Fscore so far. so its set to the best choice
                             FTemp = FScore(i, y)
-                            Change = i & " " & y
+                            Change = i & " " & y 'since this is the first cell, and were assuming its the best (so far), set change to the coords
                         Else
                             If FScore(i, y) <= FTemp Then
-                                If FScore(i, y) = FTemp Then
+                                If FScore(i, y) = FTemp Then 'if both Fscores are the same, ramdomly pick one.
                                     RandomInt = Random.Next(0, 2)
                                     If RandomInt <> 0 Then
                                         Change = i & " " & y
                                     End If
-                                Else
+                                Else 'If the current cell is lower then the current change, change will become the current cell. 
                                     Change = i & " " & y
                                     FTemp = FScore(i, y)
                                 End If
@@ -2315,13 +2327,13 @@ Module Module1
                         End If
                     End If
                 Next
-            Next
+            Next    'Whatever Change is set to at the end of this for will be the next cell to have its neighbours processed for their FScore
 
             NeighbourTempX = ""
-            NeighbourTempY = ""
+            NeighbourTempY = "" 'reset the variables
 
             For i = 1 To Len(Change)
-                If Mid(Change, i, 1) = " " Then
+                If Mid(Change, i, 1) = " " Then 'same as above. this is used to split up the change variable by finding the space and taking the values before and after said space
                     Space = i
                 End If
             Next
@@ -2344,32 +2356,32 @@ Module Module1
                 Display_Maze(Maze, width, height, CurrentX, CurrentY, ClosedList, "Generate", LastX, LastY)
             End If
 
-            Dim ParentUp, ParentDown, ParentRight, ParentLeft As Boolean
+            Dim ParentUp, ParentDown, ParentRight, ParentLeft As Boolean 'This section is for storing parent cells
 
             If CurrentX = 0 And CurrentY = 0 Then
-                ParentCell(0, 0) = "0 0"
+                ParentCell(0, 0) = "0 0" '0, 0 doesn't have a parent cell. so im just using this as a placeholder. 
 
             Else
                 ParentUp = False
                 ParentDown = False
-                ParentRight = False
+                ParentRight = False 'reset the variables
                 ParentLeft = False
 
-                If (CurrentX + 1) > width Then
+                If (CurrentX + 1) > width Then 'this is the same code repeated, so I will onlt step through one. This if is error handling, same as every before it. 
                     ParentRight = False
                 Else
-                    If ClosedList(CurrentX + 1, CurrentY) = True Then
-                        If Maze(CurrentX + 1, CurrentY) = " _" Or Maze(CurrentX + 1, CurrentY) = "  " Then
-                            ParentRight = True
+                    If ClosedList(CurrentX + 1, CurrentY) = True Then 'so if the cell to the right of the current cell is on the closed list, it must have already been procesed. could be the parent cell.
+                        If Maze(CurrentX + 1, CurrentY) = " _" Or Maze(CurrentX + 1, CurrentY) = "  " Then 'if there is a path between the two and it is on the closed list, it must be the parents
+                            ParentRight = True 'as since these mazes are "perfect" that means every cell can reach another via only one path. therefore the cell to the right must be the parent.
                         End If
-                    End If
+                    End If 'is this the best way to do this, probably not. however it works, and in its current state, its actually quite efficient. So I have no plans of reworking it. 
                 End If
 
                 If (CurrentX - 1) < 0 Then
                     ParentLeft = False
                 Else
                     If ClosedList(CurrentX - 1, CurrentY) = True Then
-                        If Maze(CurrentX, CurrentY) = " _" Or Maze(CurrentX, CurrentY) = "  " Then
+                        If Maze(CurrentX, CurrentY) = " _" Or Maze(CurrentX, CurrentY) = "  " Then 'see above
                             ParentLeft = True
                         End If
                     End If
@@ -2379,7 +2391,7 @@ Module Module1
                     ParentUp = False
                 Else
                     If ClosedList(CurrentX, CurrentY - 1) = True Then
-                        If Maze(CurrentX, CurrentY - 1) = "| " Or Maze(CurrentX, CurrentY - 1) = "  " Then
+                        If Maze(CurrentX, CurrentY - 1) = "| " Or Maze(CurrentX, CurrentY - 1) = "  " Then 'see above
                             ParentUp = True
                         End If
                     End If
@@ -2389,7 +2401,7 @@ Module Module1
                     ParentDown = False
                 Else
                     If ClosedList(CurrentX, CurrentY + 1) = True Then
-                        If Maze(CurrentX, CurrentY) = "| " Or Maze(CurrentX, CurrentY) = "  " Then
+                        If Maze(CurrentX, CurrentY) = "| " Or Maze(CurrentX, CurrentY) = "  " Then 'see above
                             ParentDown = True
                         End If
                     End If
@@ -2398,7 +2410,7 @@ Module Module1
                 If ParentRight = True Then
                     ParentCell(CurrentX, CurrentY) = CurrentX + 1 & " " & CurrentY
                 ElseIf ParentLeft = True Then
-                    ParentCell(CurrentX, CurrentY) = CurrentX - 1 & " " & CurrentY
+                    ParentCell(CurrentX, CurrentY) = CurrentX - 1 & " " & CurrentY 'just uses the values from the last 4 statements to save the parent cells
                 ElseIf ParentDown = True Then
                     ParentCell(CurrentX, CurrentY) = CurrentX & " " & CurrentY + 1
                 ElseIf ParentUp = True Then
@@ -2407,54 +2419,54 @@ Module Module1
 
             End If
 
-            Openlist(CurrentX, CurrentY) = False
+            Openlist(CurrentX, CurrentY) = False 'removes the cell from the open and closed lists as its about to be processed
             ClosedList(CurrentX, CurrentY) = True
 
-            If CurrentX = width And CurrentY = height Then
+            If CurrentX = width And CurrentY = height Then 'if at the bottom right, path has be found. so done
                 Done = True
             Else
                 Done = False
             End If
 
-        Loop Until Done = True
+        Loop Until Done = True 'keep going till the program is at the bottom right. 
 
-        CurrentX = width
+        CurrentX = width 'start at bottom right and work back. 
         CurrentY = height
 
         Dim up, left, down, right As Boolean
 
         For i = 0 To width
             For y = 0 To height
-                ClosedList(i, y) = False
+                ClosedList(i, y) = False 'removed every cell from the closed list
             Next
         Next
 
         Do
-            NeighbourTempX = ""
+            NeighbourTempX = "" 'reset the variables
             NeighbourTempY = ""
 
             up = False
             down = False
-            right = False
+            right = False 'reset the variables
             left = False
 
             For i = 1 To Len(ParentCell(CurrentX, CurrentY))
-                If Mid(ParentCell(CurrentX, CurrentY), i, 1) = " " Then
+                If Mid(ParentCell(CurrentX, CurrentY), i, 1) = " " Then 'same as before, finding the space and splitting up the variable into X and Y
                     Space = i
                 End If
             Next
 
             For i = 1 To Space - 1
-                NeighbourTempX = NeighbourTempX + Mid(ParentCell(CurrentX, CurrentY), i, 1)
+                NeighbourTempX = NeighbourTempX + Mid(ParentCell(CurrentX, CurrentY), i, 1) 'see above
             Next
 
             For i = Space + 1 To Len(ParentCell(CurrentX, CurrentY))
-                NeighbourTempY = NeighbourTempY + Mid(ParentCell(CurrentX, CurrentY), i, 1)
+                NeighbourTempY = NeighbourTempY + Mid(ParentCell(CurrentX, CurrentY), i, 1) 'see above
             Next
 
             If NeighbourTempY < CurrentY Then
                 up = True
-            ElseIf NeighbourTempY > CurrentY Then
+            ElseIf NeighbourTempY > CurrentY Then 'working out what direction the parent is
                 down = True
             ElseIf NeighbourTempX < CurrentX Then
                 left = True
@@ -2466,7 +2478,7 @@ Module Module1
                 Maze_Solved(CurrentX, CurrentY) = "|±"
             ElseIf Maze(CurrentX, CurrentY) = "| " Then
                 Maze_Solved(CurrentX, CurrentY) = "|+"
-            ElseIf Maze(CurrentX, CurrentY) = " _" Then
+            ElseIf Maze(CurrentX, CurrentY) = " _" Then 'changing the current cell to include the + or ± to signify the route.
                 Maze_Solved(CurrentX, CurrentY) = " ±"
             ElseIf Maze(CurrentX, CurrentY) = "  " Then
                 Maze_Solved(CurrentX, CurrentY) = " +"
@@ -2480,7 +2492,7 @@ Module Module1
                 CurrentX = NeighbourTempX
                 CurrentY = NeighbourTempY
 
-            ElseIf right = True Then
+            ElseIf right = True Then 'moving the current cell to the parent of that cell. 
                 CurrentX = NeighbourTempX
                 CurrentY = NeighbourTempY
 
@@ -2496,13 +2508,13 @@ Module Module1
                 Display_Maze(Maze_Solved, width, height, CurrentX, CurrentY, ClosedList, "A*", 0, 0)
             End If
 
-        Loop Until CurrentX = 0 And CurrentY = 0
+        Loop Until CurrentX = 0 And CurrentY = 0 'loop until the program is back at the start
 
         If Maze(0, 0) = "|_" Then
             Maze_Solved(0, 0) = "|±"
         ElseIf Maze(0, 0) = " _" Then
             Maze_Solved(0, 0) = " ±"
-        ElseIf Maze(0, 0) = "| " Then
+        ElseIf Maze(0, 0) = "| " Then 'sort out the top left cell
             Maze_Solved(0, 0) = "|+"
         ElseIf Maze(0, 0) = "  " Then
             Maze_Solved(0, 0) = " +"
@@ -2510,7 +2522,7 @@ Module Module1
 
         For i = 0 To width
             For y = 0 To height
-                ClosedList(i, y) = False
+                ClosedList(i, y) = False 'reset the ClosedList to False
             Next
         Next
 
@@ -2530,25 +2542,29 @@ Module Module1
 
         Console.Clear()
 
-        Dim FileHandle As IO.StreamWriter
+        Dim FileHandle As IO.StreamWriter 'opens the file in write format
         Console.Write("Please enter the name you wish for the file to be named (Do not include .txt): ")
         Dim FileName As String = Console.ReadLine()
 
-        FileName = FileName + ".Txt"
+        If Lcase(mid(FileName, len(FileName) - 3)) = ".txt" Then 'Checks for a .Txt at the end of the filename
+            FileHandle = New IO.StreamReader(FileName) 'user didn't listen to instructions, so don't bother adding .txt
+        else
+            FileHandle = New IO.StreamReader(FileName & ".Txt") 'adds ".txt" to the file name. 
+        End if
 
-        FileHandle = New IO.StreamWriter(FileName)
+        FileHandle = New IO.StreamWriter(FileName) 'opens the file
 
-        FileHandle.WriteLine(Height)
+        FileHandle.WriteLine(Height) 'writes the height and width to the file on their own lines
         FileHandle.WriteLine(Width)
 
         For i = 0 To Width
             For y = 0 To Height
-                FileHandle.Write(maze(i, y))
+                FileHandle.Write(maze(i, y)) 'writes every cell to the file.
             Next
             FileHandle.WriteLine()
         Next
 
-        FileHandle.Close()
+        FileHandle.Close() 'closes the file. Just good practice. and prevents an issue if the same file is opened again later on in the programs life
 
         Console.WriteLine("Maze Saved, please press enter to continue")
         Console.ReadLine()
