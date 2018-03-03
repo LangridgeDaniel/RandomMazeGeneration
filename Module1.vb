@@ -1402,8 +1402,6 @@ Module Module1
 
 #End Region
 
-#Region "Post Generation Stuff"
-
     Sub view_last(ByVal Maze(,) As String, ByVal Width As Integer, ByVal height As Integer, ByVal Maze_visited(,) As Boolean)
 
         Console.Clear()
@@ -2547,9 +2545,9 @@ Module Module1
         Dim FileName As String = Console.ReadLine()
 
         If Lcase(mid(FileName, len(FileName) - 3)) = ".txt" Then 'Checks for a .Txt at the end of the filename
-            FileHandle = New IO.StreamReader(FileName) 'user didn't listen to instructions, so don't bother adding .txt
+            FileHandle = New IO.StreamWriter(FileName) 'user didn't listen to instructions, so don't bother adding .txt
         else
-            FileHandle = New IO.StreamReader(FileName & ".Txt") 'adds ".txt" to the file name. 
+            FileHandle = New IO.StreamWriter(FileName & ".Txt") 'adds ".txt" to the file name. 
         End if
 
         FileHandle = New IO.StreamWriter(FileName) 'opens the file
@@ -2570,7 +2568,4 @@ Module Module1
         Console.ReadLine()
 
     End Sub
-
-#End Region
-
 End Module
