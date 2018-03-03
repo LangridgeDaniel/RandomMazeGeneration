@@ -1,4 +1,4 @@
-﻿Public Class Menu
+Public Class Menu
     Private Sub Menu_First()
         Console.Clear()
         Console.WriteLine("SYSTEM STUFF")
@@ -10,7 +10,7 @@
         Console.WriteLine(" Aldous-Broder")
         Console.WriteLine(" Wilson's")
         Console.WriteLine(" Hunt-and-Kill")
-        Console.WriteLine(" Binary Tree")
+        Console.WriteLine(" Binary Tree") 'Menu Layout
         Console.WriteLine(" Sidewinder")
         Console.WriteLine(" Load a Maze from text document")
         Console.WriteLine()
@@ -21,17 +21,6 @@
         Console.WriteLine(" Save last maze to text document")
         Console.WriteLine()
         Console.WriteLine(" Exit")
-    End Sub
-
-    Sub Menu_Settings_Back(Display_Each_Itteration)
-
-        Console.Clear()
-        Console.WriteLine("Display Settings:")
-        Console.WriteLine()
-        Console.WriteLine("Display after every itteration  Yes   No")
-        Console.WriteLine()
-        Console.WriteLine(">Back<")
-
     End Sub
 
     Public Sub Menu(ByRef Maze(,) As String, ByRef width As Integer, ByVal height As Integer, ByVal maze_visited(,) As Boolean, ByRef Display_Each_Itteration As Boolean, ByRef Maze_solved(,) As String)
@@ -46,47 +35,50 @@
 
         Dim MenuKey As ConsoleKey = ConsoleKey.K
         Dim MenuSelection As Integer = 1
+
         Console.Title = "Random Maze Generation Investigation"
         Console.CursorVisible = False
-        Menu.Menu_First()
 
-        Do Until MenuKey = ConsoleKey.Enter
-            MenuKey = Console.ReadKey().Key
+        Menu.Menu_First() 'Print the initial menu
+
+        Do Until MenuKey = ConsoleKey.Enter 'keep looping until the user presses enter
+
+            MenuKey = Console.ReadKey().Key 'takes the users key input
             Console.SetCursorPosition(0, 20)
 
             Ignore = False
 
-            If maze_visited(0, 0) = True Then
-                Select Case MenuKey
+            If maze_visited(0, 0) = True Then 'checks to see if a maze has been generated yet or not
+                Select Case MenuKey 'unlock Post Generation stuff
                     Case ConsoleKey.DownArrow
-                        If MenuSelection = 14 Then
+                        If MenuSelection = 14 Then 'if at bottom, go to top
                             MenuSelection = 1
                         Else
                             MenuSelection += 1
                         End If
                     Case ConsoleKey.UpArrow
-                        If MenuSelection = 1 Then
+                        If MenuSelection = 1 Then 'if at top, go to bottom
                             MenuSelection = 14
                         Else
                             MenuSelection -= 1
                         End If
                     Case Else
-                        Ignore = True
+                        Ignore = True 'this is used to remove wrong key inputs. as if the uses enters a wrong letter, it will show on the menu without this
                         Console.SetCursorPosition(0, 20)
                         Console.Write("     ")
                 End Select
 
             Else
                 Select Case MenuKey
-                    Case ConsoleKey.DownArrow
-                        If MenuSelection = 9 Then
+                    Case ConsoleKey.DownArrow 'Lock Post Generation stuff
+                        If MenuSelection = 9 Then 'same as above. only skipping post generation
                             MenuSelection = 14
                         ElseIf MenuSelection = 14 Then
                             MenuSelection = 1
                         Else
                             MenuSelection += 1
                         End If
-                    Case ConsoleKey.UpArrow
+                    Case ConsoleKey.UpArrow 'same as above. only skipping post generation
                         If MenuSelection = 14 Then
                             MenuSelection = 9
                         ElseIf MenuSelection = 1 Then
@@ -95,13 +87,13 @@
                             MenuSelection -= 1
                         End If
                     Case Else
-                        Ignore = True
+                        Ignore = True 'this is used to remove wrong key inputs. as if the uses enters a wrong letter, it will show on the menu without this
                         Console.SetCursorPosition(0, 20)
                         Console.Write("     ")
                 End Select
             End If
 
-            Select Case MenuSelection
+            Select Case MenuSelection 'depending on MenuSelection, set the cursor position to the correct line and write out the menu option with the > < to signify whats selected
                 Case 1
                     Console.SetCursorPosition(0, 1)
                     Console.WriteLine(">Change the Dimensions of the maze<")
@@ -146,7 +138,7 @@
                     Console.WriteLine(">Exit<")
             End Select
 
-            If Last <> -1 And Ignore = False Then
+            If Last <> -1 And Ignore = False Then 'use the last variable to do the same as above, however to remove the > < from the last menu option
                 Select Case Last
                     Case 1
                         Console.SetCursorPosition(0, 1)
@@ -193,13 +185,13 @@
                 End Select
             End If
 
-            Last = MenuSelection
+            Last = MenuSelection 'to tell the program what to remove the > < from on the next run through
             Console.SetCursorPosition(0, 20)
 
         Loop
 
-        Select Case MenuSelection
-            Case 1
+        Select Case MenuSelection 'What to run when the user presses enter
+            Case 1 'Change Dimension
                 If maze_visited(0, 0) = True Then
                     Console.Write("Are you sure? This will overwrite your currently stored maze (Y or N): ")
                     Dim Answer As String = Console.ReadLine()
@@ -215,14 +207,14 @@
                     Set_Dimensions(height, width, "User", Display_Each_Itteration, "")
                 End If
 
-            Case 2
+            Case 2 'Display Settings sub-menu
                 Dim Settings_MenuKey As ConsoleKey = ConsoleKey.K
                 Dim Settings_MenuSelection As Integer = 1
                 Console.CursorVisible = False
                 Menu.Menu_Settings_Display(Display_Each_Itteration)
 
-                Dim Done As Boolean = False
-
+                Dim Done As Boolean = False 'This menu system is exactly the same as the manu its currently running in. The only difference is the number of options and the options to be displayed
+                                            'Therefore I feel there is no need to comment this
                 Do
                     Do Until Settings_MenuKey = ConsoleKey.Enter
                         Settings_MenuKey = Console.ReadKey().Key
@@ -286,24 +278,27 @@
 
                 MenuSelection = 1
 
-            Case 3
-                Dim StartTime_seconds As DateTime = Date.Now
+            Case 3 'Recursive Backtracking
+
+                'Options 3 to 8 are extremly similar (only one major difference), therefore I will only comment this one (other than the major change). 
+
+                Dim StartTime_seconds As DateTime = Date.Now 'Start time
                 Dim StartTime_Milli As DateTime = Date.Now
 
                 Dim User_answer As String
                 Dim Valid_Answer As Boolean
 
-                Clear(Maze, width, height, maze_visited)
-                Recursive_Backtracking(Maze, width, height, maze_visited, Display_Each_Itteration)
+                Clear(Maze, width, height, maze_visited) 'reset the required variables
+                Recursive_Backtracking(Maze, width, height, maze_visited, Display_Each_Itteration) 'run the algorithm
 
-                Dim FinishTime_Seconds As DateTime = Date.Now
-                Dim FinishTime_Milli As DateTime = Date.Now
-                Dim TimeTaken_seconds As TimeSpan = FinishTime_Seconds - StartTime_seconds
+                Dim FinishTime_Seconds As DateTime = Date.Now 'end times
+                Dim FinishTime_Milli As DateTime = Date.Now 
+                Dim TimeTaken_seconds As TimeSpan = FinishTime_Seconds - StartTime_seconds 'calculate the time taken in seconds and miliseconds
                 Dim TimeTaken_Milli As TimeSpan = FinishTime_Milli - StartTime_Milli
 
-                Console.WriteLine("Time Taken: " & TimeTaken_seconds.Seconds & "." & TimeTaken_Milli.Milliseconds & " seconds")
+                Console.WriteLine("Time Taken: " & TimeTaken_seconds.Seconds & "." & TimeTaken_Milli.Milliseconds & " seconds") 'output the time taken
                 Console.WriteLine()
-                Console.Write("Would you like to Pathfind this maze? (Y or N): ")
+                Console.Write("Would you like to Pathfind this maze? (Y or N): ") 'Ask the user if they wish to pathfind the maze without having to go back to the main menu
                 User_answer = UCase(Console.ReadLine())
                 If User_answer = "Y" Then
                     Do
@@ -312,9 +307,9 @@
                         User_answer = UCase(Console.ReadLine())
                         Valid_Answer = True
                         If User_answer = "B" Then
-                            Solve_Last_Recursive(Maze, width, height, Maze_solved, Display_Each_Itteration)
+                            Solve_Last_Recursive(Maze, width, height, Maze_solved, Display_Each_Itteration) 'Run Breadth first pathfinding
                         ElseIf User_answer = "A" Then
-                            Solve_Last_AStar(Maze, width, height, Maze_solved, Display_Each_Itteration)
+                            Solve_Last_AStar(Maze, width, height, Maze_solved, Display_Each_Itteration) 'Run A* Pathfinding
                         Else
                             Valid_Answer = False
                             Console.WriteLine("Invalid answer, try again")
@@ -336,7 +331,10 @@
                     Console.ReadLine()
                 End If
 
-            Case 4
+            Case 4 'Aldous-Broder
+
+                'See "Case 3"
+
                 Dim StartTime_seconds As DateTime = Date.Now
                 Dim StartTime_Milli As DateTime = Date.Now
                 Dim StartTime_Min As DateTime = Date.Now
@@ -349,9 +347,9 @@
 
                 Dim FinishTime_seconds As DateTime = Date.Now
                 Dim FinishTime_Milli As DateTime = Date.Now
-                Dim FinishTime_Min As DateTime = Date.Now
-                Dim TimeTaken_seconds As TimeSpan = FinishTime_seconds - StartTime_seconds
-                Dim TimeTaken_Milli As TimeSpan = FinishTime_Milli - StartTime_Milli
+                Dim FinishTime_Min As DateTime = Date.Now 'Here is the major diffrence. Since this algorithm is extremly inefficient and could theoretically take an infinite amount of time to 
+                Dim TimeTaken_seconds As TimeSpan = FinishTime_seconds - StartTime_seconds 'generate (just watching it generate should prove that point), I am timing it in minutes and seconds rather than seconds and miliseconds. 
+                Dim TimeTaken_Milli As TimeSpan = FinishTime_Milli - StartTime_Milli 'The process is the same, it will just look slightly different when the program is actually running
                 Dim TimeTaken_min As TimeSpan = FinishTime_Min - StartTime_Min
 
                 Console.WriteLine("Time Taken: " & TimeTaken_min.Minutes & "." & TimeTaken_seconds.Seconds & " Minutes")
@@ -389,7 +387,10 @@
                     Console.ReadLine()
                 End If
 
-            Case 5
+            Case 5 'Wilsons
+
+                'See "Case 3"
+
                 Dim StartTime_seconds As DateTime = Date.Now
                 Dim StartTime_Milli As DateTime = Date.Now
 
@@ -439,7 +440,10 @@
                     Console.ReadLine()
                 End If
 
-            Case 6
+            Case 6 'Hunt & Kill
+
+                'See "Case 3"
+
                 Dim StartTime_seconds As DateTime = Date.Now
                 Dim StartTime_Milli As DateTime = Date.Now
 
@@ -489,7 +493,10 @@
                     Console.ReadLine()
                 End If
 
-            Case 7
+            Case 7 'Binary Tree
+
+                'See "Case 3"
+
                 Dim StartTime_seconds As DateTime = Date.Now
                 Dim StartTime_Milli As DateTime = Date.Now
 
@@ -539,7 +546,10 @@
                     Console.ReadLine()
                 End If
 
-            Case 8
+            Case 8 'Sidewinder
+
+                'See "Case 3"
+
                 Dim StartTime_seconds As DateTime = Date.Now
                 Dim StartTime_Milli As DateTime = Date.Now
 
@@ -589,13 +599,15 @@
                     Console.ReadLine()
                 End If
 
-            Case 9
-                Clear(Maze, width, height, maze_visited)
-                Load_Maze(Maze, width, height, maze_visited, Display_Each_Itteration, "")
-            Case 10
-                view_last(Maze, width, height, maze_visited)
-            Case 11
-                Dim Settings_MenuKey As ConsoleKey = ConsoleKey.K
+            Case 9 'loading from a text file
+                Clear(Maze, width, height, maze_visited) 'clear the required variables
+                Load_Maze(Maze, width, height, maze_visited, Display_Each_Itteration, "") 'Load the maze
+
+            Case 10 'View last maze
+                view_last(Maze, width, height, maze_visited) 
+
+            Case 11 'Pathfinding sub-menu
+                Dim Settings_MenuKey As ConsoleKey = ConsoleKey.K 'Same as "Case 2" and the gload menu system its running in
                 Dim Settings_MenuSelection As Integer = 1
 
                 Dim Solve_Last As Integer = 1
@@ -673,12 +685,14 @@
 
                 MenuSelection = 1
 
-            Case 12
+            Case 12 'Play the current maze
                 Play_Last(Maze, width, height)
-            Case 13
+
+            Case 13 'Save the maze to a text file
                 Save_To_Text_File(Maze, width, height)
+
             Case 14
-                End
+                End 'close the program
         End Select
 
     End Sub
@@ -687,8 +701,8 @@
 
         For i = 0 To Width
             For y = 0 To Height
-                Maze_Visited(i, y) = False
-                Maze(i, y) = "|_"
+                Maze_Visited(i, y) = False 'reset the Maze_visited to False
+                Maze(i, y) = "|_" 're initialise the maze array to "|_" for every cell
             Next
         Next
 
@@ -700,7 +714,7 @@
             Console.Clear()
             Console.WriteLine("Display Settings:")
             Console.WriteLine()
-            Console.WriteLine("Display after every itteration >Yes<  No")
+            Console.WriteLine("Display after every itteration >Yes<  No") 'Two options for The Display menu. 
             Console.WriteLine()
             Console.WriteLine(" Back")
         Else
@@ -714,11 +728,22 @@
 
     End Sub
 
+    private Sub Menu_Settings_Back(Display_Each_Itteration)
+
+        Console.Clear()
+        Console.WriteLine("Display Settings:")
+        Console.WriteLine()
+        Console.WriteLine("Display after every itteration  Yes   No") 'Settings Menu
+        Console.WriteLine()
+        Console.WriteLine(">Back<")
+
+    End Sub
+
     Private Sub Menu_Solve_Recursive()
 
         Console.Clear()
         Console.WriteLine(">Solve using Breadth First Searching<")
-        Console.WriteLine(" Solve using A* Pathfinding")
+        Console.WriteLine(" Solve using A* Pathfinding") 'Layout for pathfinding menu
         Console.WriteLine()
         Console.WriteLine(" Back")
 
