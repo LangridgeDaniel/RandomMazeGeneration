@@ -1,27 +1,4 @@
 Public Class Menu
-    Private Sub Menu_First()
-        Console.Clear()
-        Console.WriteLine("SYSTEM STUFF")
-        Console.WriteLine(">Change the Dimensions of the maze<")
-        Console.WriteLine(" Generation Settings")
-        Console.WriteLine()
-        Console.WriteLine("ALGORITHMS:")
-        Console.WriteLine(" Recursive Backtracking")
-        Console.WriteLine(" Aldous-Broder")
-        Console.WriteLine(" Wilson's")
-        Console.WriteLine(" Hunt-and-Kill")
-        Console.WriteLine(" Binary Tree") 'Menu Layout
-        Console.WriteLine(" Sidewinder")
-        Console.WriteLine(" Load a Maze from text document")
-        Console.WriteLine()
-        Console.WriteLine("POST GENERATION STUFF:")
-        Console.WriteLine(" View Last Generated Maze")
-        Console.WriteLine(" Solve Last Generated Maze")
-        Console.WriteLine(" Play last generated maze")
-        Console.WriteLine(" Save last maze to text document")
-        Console.WriteLine()
-        Console.WriteLine(" Exit")
-    End Sub
 
     Public Sub Menu(ByRef Maze(,) As String, ByRef width As Integer, ByVal height As Integer, ByVal maze_visited(,) As Boolean, ByRef Display_Each_Itteration As Boolean, ByRef Maze_solved(,) As String)
 
@@ -708,6 +685,8 @@ Public Class Menu
 
     End Sub
 
+#Region "Menu Layouts"
+
     Private Sub Menu_Settings_Display(ByRef Display_Every_Itteration As Boolean)
 
         If Display_Every_Itteration = True Then
@@ -748,5 +727,31 @@ Public Class Menu
         Console.WriteLine(" Back")
 
     End Sub
+
+    Private Sub Menu_First()
+        Console.Clear()
+        Console.WriteLine("SYSTEM STUFF")
+        Console.WriteLine(">Change the Dimensions of the maze<")
+        Console.WriteLine(" Generation Settings")
+        Console.WriteLine()
+        Console.WriteLine("ALGORITHMS:")
+        Console.WriteLine(" Recursive Backtracking")
+        Console.WriteLine(" Aldous-Broder")
+        Console.WriteLine(" Wilson's")
+        Console.WriteLine(" Hunt-and-Kill")
+        Console.WriteLine(" Binary Tree") 'Menu Layout
+        Console.WriteLine(" Sidewinder")
+        Console.WriteLine(" Load a Maze from text document")
+        Console.WriteLine()
+        Console.WriteLine("POST GENERATION STUFF:")
+        Console.WriteLine(" View Last Generated Maze")
+        Console.WriteLine(" Solve Last Generated Maze")
+        Console.WriteLine(" Play last generated maze")
+        Console.WriteLine(" Save last maze to text document")
+        Console.WriteLine()
+        Console.WriteLine(" Exit")
+    End Sub
+
+#end Region
 
 End Class
