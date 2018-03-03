@@ -191,7 +191,7 @@ Public Class Menu
                 Menu.Menu_Settings_Display(Display_Each_Itteration)
 
                 Dim Done As Boolean = False 'This menu system is exactly the same as the manu its currently running in. The only difference is the number of options and the options to be displayed
-                                            'Therefore I feel there is no need to comment this
+                'Therefore I feel there is no need to comment this
                 Do
                     Do Until Settings_MenuKey = ConsoleKey.Enter
                         Settings_MenuKey = Console.ReadKey().Key
@@ -269,7 +269,7 @@ Public Class Menu
                 Recursive_Backtracking(Maze, width, height, maze_visited, Display_Each_Itteration) 'run the algorithm
 
                 Dim FinishTime_Seconds As DateTime = Date.Now 'end times
-                Dim FinishTime_Milli As DateTime = Date.Now 
+                Dim FinishTime_Milli As DateTime = Date.Now
                 Dim TimeTaken_seconds As TimeSpan = FinishTime_Seconds - StartTime_seconds 'calculate the time taken in seconds and miliseconds
                 Dim TimeTaken_Milli As TimeSpan = FinishTime_Milli - StartTime_Milli
 
@@ -581,7 +581,7 @@ Public Class Menu
                 Load_Maze(Maze, width, height, maze_visited, Display_Each_Itteration, "") 'Load the maze
 
             Case 10 'View last maze
-                view_last(Maze, width, height, maze_visited) 
+                view_last(Maze, width, height, maze_visited)
 
             Case 11 'Pathfinding sub-menu
                 Dim Settings_MenuKey As ConsoleKey = ConsoleKey.K 'Same as "Case 2" and the gload menu system its running in
@@ -707,7 +707,7 @@ Public Class Menu
 
     End Sub
 
-    private Sub Menu_Settings_Back(Display_Each_Itteration)
+    Private Sub Menu_Settings_Back(Display_Each_Itteration)
 
         Console.Clear()
         Console.WriteLine("Display Settings:")
@@ -752,6 +752,6 @@ Public Class Menu
         Console.WriteLine(" Exit")
     End Sub
 
-#end Region
+#End Region
 
 End Class
